@@ -1,8 +1,9 @@
 package jobs
+
 /*
 Processing the validity of the
 incoming file as well as decoding it
-into struct Job
+into struct Job.
 */
 
 import (

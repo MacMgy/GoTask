@@ -2,7 +2,7 @@ package main
 /*
 This is the main package of the program,
 for its correct operation it is necessary to
-redefine cosnt path.
+redefine const path.
 Please note that syscall is used in the package math
 and you should also set the correct version math.dll
 according to your system.
@@ -21,29 +21,29 @@ import (
 )
 
 const path = "./jobs.json" // Define the path to the file with tasks
-const numCPU = 4 // Number of CPU
+const numCPU = 4
 
 type Result struct {
 	Job, Output int
 }
 
 func solve(jb [] jobs.Job) [] Result {
-	var ch = make(chan int, numCPU)
-	var chi = make(chan int, numCPU) // to store the current job ID
 
+	var ch = make(chan int, numCPU)
 	var result [] Result
+
 	for i := 0; i < len(jb); i++ {
 		if i + numCPU <= len(jb) {
 			for j := i; j < i + numCPU; j++ {
-				go math.Div(jb[j].Arg1, jb[j].Arg2, j, ch, chi)
+				go math.Div(jb[j].Arg1, jb[j].Arg2, j, ch) // j - id current job
 			}
 			for range [numCPU]int{} {
-				result = append(result, Result{<-chi, <-ch})
+				result = append(result, Result{<-ch, <-ch})
 			}
 			i += numCPU
 		} else {
-			go math.Div(jb[i].Arg1, jb[i].Arg2, i, ch, chi)
-			result = append(result, Result{<-chi, <-ch})
+			go math.Div(jb[i].Arg1, jb[i].Arg2, i, ch)
+			result = append(result, Result{<-ch, <-ch})
 		}
 	}
 	return result
